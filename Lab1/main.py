@@ -28,8 +28,11 @@ def to_deterministic(automaton):
     if len(result.begin.intersection(automaton.finals)) != 0:
         result.finals.add(result.begin)
 
+    removed = set()
+
     while len(states) != 0:
         state = next(iter(states))
+        removed.add(state)
 
         for sign in automaton.alphabet:
             new_state = frozenset()
@@ -47,7 +50,7 @@ def to_deterministic(automaton):
             else:
                 result.transitions[(state, sign)] = {new_state}
 
-            if not (new_state in states):
+            if not (new_state in removed):
                 states.add(new_state)
         states.remove(state)
 
@@ -87,6 +90,18 @@ def main():
                                        (2, "b"): {1, 2},
                                    }), 0, {2})
     """
+    """automaton = fa.FiniteAutomaton({0, 1, 2, 3}, {"a", "b", "c"},
+                                   dict({
+                                       (0, "a"): {0, 1, 2, 3},
+                                       (0, "b"): {1, 2},
+                                       (0, "e"): {1},
+                                       (1, "c"): {2},
+                                       (1, "b"): {1},
+                                       (1, "e"): {2},
+                                       (2, "c"): {2},
+                                       (3, "e"): {0},
+                                   }), 0, {2})"""
+
     automaton = fa.FiniteAutomaton({0, 1, 2, 3}, {"a", "b", "c"},
                                    dict({
                                        (0, "a"): {0, 1, 2, 3},
