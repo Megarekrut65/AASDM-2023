@@ -14,5 +14,8 @@ class FiniteAutomaton:
         self.finals = finals  # F
 
     def __str__(self):
-        return f"A={self.states}\nX={self.alphabet}\nf={self.transitions}\na0={self.begin}\nF={self.finals}"
-    
+        return f"A={self.states}\nX={self.alphabet}\nf={self.transitions}\na0={self.begin}\nF={self.finals}\n\n"
+
+    def __call__(self, state, sign):
+
+        return self.transitions.get((state, sign), set())
