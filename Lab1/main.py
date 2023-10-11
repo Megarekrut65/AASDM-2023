@@ -61,7 +61,9 @@ def rename_states(automaton):
     names = dict()
     for i, state in enumerate(automaton.states):
         names[frozenset(state)] = f"a{i}"
-        states.add(f"a{i}")
+        states.add(names[frozenset(state)])
+
+    names[frozenset({})] = ""
 
     for key, value in automaton.transitions.items():
         new_key = (names[key[0]], key[1])
@@ -103,6 +105,7 @@ def main():
     renamed, names = rename_states(result)
     print(names)
     print(renamed)
+
 
 if __name__ == "__main__":
     main()
