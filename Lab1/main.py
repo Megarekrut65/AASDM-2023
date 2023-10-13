@@ -1,5 +1,6 @@
+import automatons
 import finite_automaton as fa
-
+import json
 
 def build_e(state, automaton):
 
@@ -64,7 +65,8 @@ def rename_states(automaton):
     names = dict()
     for i, state in enumerate(automaton.states):
         names[frozenset(state)] = f"a{i}"
-        states.add(names[frozenset(state)])
+        if len(frozenset(state)) != 0:
+            states.add(names[frozenset(state)])
 
     names[frozenset({})] = ""
 
@@ -76,40 +78,17 @@ def rename_states(automaton):
 
     return fa.FiniteAutomaton(states, automaton.alphabet, transitions, names[automaton.begin], finals), names
 
+class SetEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, set):
+            return list(obj)
+        if isinstance(obj, tuple):
+            return str(obj)
+        return json.JSONEncoder.default(self, obj)
+
 
 def main():
-    """automaton = fa.FiniteAutomaton({0, 1, 2}, {"a", "b", "e"},
-                                   dict({
-                                       (0, "a"): {0},
-                                       (0, "b"): {2},
-                                       (0, "e"): {1},
-                                       (1, "a"): {0},
-                                       (1, "b"): {2},
-                                       (1, "e"): {2},
-                                       (2, "a"): {2},
-                                       (2, "b"): {1, 2},
-                                   }), 0, {2})
-    """
-    """automaton = fa.FiniteAutomaton({0, 1, 2, 3}, {"a", "b", "c"},
-                                   dict({
-                                       (0, "a"): {0, 1, 2, 3},
-                                       (0, "b"): {1, 2},
-                                       (0, "e"): {1},
-                                       (1, "c"): {2},
-                                       (1, "b"): {1},
-                                       (1, "e"): {2},
-                                       (2, "c"): {2},
-                                       (3, "e"): {0},
-                                   }), 0, {2})"""
-    automaton = fa.FiniteAutomaton({"s", "g", "a", "f"}, {"1", "0"},
-                                   dict({
-                                       ("s", "1"): {"a", "s", "f"},
-                                       ("s", "e"): {"f"},
-                                       ("a", "e"): {"s", "f"},
-                                       ("s", "0"): {"g"},
-                                       ("a", "1"): {"a", "s", "f"},
-                                       ("a", "0"): {"f"}
-                                   }), "s", {"f", "g"})
+    automaton = automatons.automaton1
 
     result = to_deterministic(automaton)
     print(result)
@@ -117,6 +96,14 @@ def main():
     renamed, names = rename_states(result)
     print(names)
     print(renamed)
+
+    transitions = {",".join(key): value for key, value in automaton.transitions.items()}
+
+    automaton.transitions = transitions
+
+    file = open("test.json", "w")
+    file.write(json.dumps(renamed.__dict__, cls=SetEncoder))
+    file.close()
 
 
 if __name__ == "__main__":
