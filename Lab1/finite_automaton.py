@@ -29,10 +29,21 @@ class FiniteAutomaton:
 
     def to_json(self):
         automaton_data = {
-            'states': list(self.states),
-            'alphabet': list(self.alphabet),
-            'transitions': {str(key): list(value) for key, value in self.transitions.items()},
-            'begin': self.begin,
-            'finals': list(self.finals)
+            "states": list(self.states),
+            "alphabet": list(self.alphabet),
+            "transitions": {str(key): list(value) for key, value in self.transitions.items()},
+            "begin": self.begin,
+            "finals": list(self.finals)
         }
-        return json.dumps(automaton_data, indent=4, )
+        return json.dumps(automaton_data, indent=4)
+
+    @classmethod
+    def from_json(cls, json_str):
+        automaton_data = json.loads(json_str)
+        states = set(automaton_data["states"])
+        alphabet = set(automaton_data["alphabet"])
+        
+        transitions = {eval(key): set(value) for key, value in automaton_data["transitions"].items()}
+        begin = automaton_data["begin"]
+        finals = set(automaton_data["finals"])
+        return cls(states, alphabet, transitions, begin, finals)

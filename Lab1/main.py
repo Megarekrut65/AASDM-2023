@@ -1,6 +1,5 @@
-import automatons
 import finite_automaton as fa
-import json
+
 
 def build_e(state, automaton):
 
@@ -78,17 +77,12 @@ def rename_states(automaton):
 
     return fa.FiniteAutomaton(states, automaton.alphabet, transitions, names[automaton.begin], finals), names
 
-class SetEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, set):
-            return list(obj)
-        if isinstance(obj, tuple):
-            return str(obj)
-        return json.JSONEncoder.default(self, obj)
-
 
 def main():
-    automaton = automatons.automaton1
+    with open("automatons.json") as file:
+        automaton = fa.FiniteAutomaton.from_json(file.read())
+
+    print(automaton)
 
     result = to_deterministic(automaton)
     print(result)
@@ -97,9 +91,9 @@ def main():
     print(names)
     print(renamed)
 
-    file = open("test.json", "w")
-    file.write(renamed.to_json())
-    file.close()
+    """file = open("automatons.json", "w")
+    file.write(automaton.to_json())
+    file.close()"""
 
 
 if __name__ == "__main__":
