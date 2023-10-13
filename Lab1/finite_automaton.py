@@ -1,3 +1,6 @@
+import json
+
+
 class FiniteAutomaton:
     def __init__(self, states, alphabet, transitions, begin, finals):
         """
@@ -23,3 +26,13 @@ class FiniteAutomaton:
     def __call__(self, state, sign):
 
         return self.transitions.get((state, sign), set())
+
+    def to_json(self):
+        automaton_data = {
+            'states': list(self.states),
+            'alphabet': list(self.alphabet),
+            'transitions': {str(key): list(value) for key, value in self.transitions.items()},
+            'begin': self.begin,
+            'finals': list(self.finals)
+        }
+        return json.dumps(automaton_data, indent=4, )

@@ -97,12 +97,8 @@ def main():
     print(names)
     print(renamed)
 
-    transitions = {",".join(key): value for key, value in automaton.transitions.items()}
-
-    automaton.transitions = transitions
-
     file = open("test.json", "w")
-    file.write(json.dumps(renamed.__dict__, cls=SetEncoder))
+    file.write(renamed.to_json())
     file.close()
 
 
