@@ -79,7 +79,7 @@ def rename_states(automaton):
 
 
 def main():
-    with open("automatons.json") as file:
+    with open("automatons/automaton_1.json") as file:
         automaton = fa.FiniteAutomaton.from_json(file.read())
 
     print(automaton)
