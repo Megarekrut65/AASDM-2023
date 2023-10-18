@@ -28,7 +28,7 @@ def main():
         print(names)
         print("DFA after renaming:", renamed, sep="\n")
 
-        with open(f"{OUTPUT_DIR}/{path}", "w") as file:
+        with open(f"{OUTPUT_DIR}/{'result_' + path}", "w") as file:
             file.write(renamed.to_json())
 
 
