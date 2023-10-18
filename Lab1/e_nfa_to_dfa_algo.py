@@ -49,6 +49,11 @@ def e_nfa_to_dfa(automaton):
 
 
 def rename_states(automaton):
+    """
+    Renames sets of old states to new names. Example: state {1,2,3} will be state a1.
+    :param automaton: FA
+    :return: FA with same states but other names of states
+    """
     states = set()
     transitions = dict()
 

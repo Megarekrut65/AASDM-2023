@@ -7,6 +7,10 @@ OUTPUT_DIR = "results"
 
 
 def main():
+    """
+    
+    Convert all e-NFA from folder {INPUT_DIR} to DFA and saves it to folder {OUTPUT_DIR}
+    """
     if not os.path.isdir(OUTPUT_DIR):
         os.mkdir(OUTPUT_DIR)
 

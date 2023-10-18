@@ -4,6 +4,12 @@ class EpsilonSet:
         self.sets = dict()
 
     def build_e(self, state, automaton):
+        """
+        Creates set of states achievable with state by epsilon transition
+        :param state:
+        :param automaton: FA
+        :return: created frozenset
+        """
         if isinstance(state, set):
             state = frozenset(state)
 
