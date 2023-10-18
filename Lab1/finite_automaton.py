@@ -16,6 +16,28 @@ class FiniteAutomaton:
         self.begin = begin  # a0
         self.finals = finals  # F
 
+        self.__build_epsilon()
+
+    def __build_epsilon(self):
+        for key, value in self.transitions.items():
+            new_value = value.copy()
+
+            for item in value:
+                states = self.__get_epsilon_states(item)
+                new_value = new_value.union(states)
+
+            self.transitions[key] = new_value
+
+    def __get_epsilon_states(self, state):
+        e_states = self.__call__(state, "e")
+
+        result = e_states.copy()
+        for item in e_states:
+            states = self.__get_epsilon_states(item)
+            result = result.union(states)
+
+        return result
+
     def __str__(self):
         transitions = ""
         for key in self.transitions:

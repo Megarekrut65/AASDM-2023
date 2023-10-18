@@ -1,99 +1,35 @@
+import e_nfa_to_dfa_algo as algo
 import finite_automaton as fa
+import os
 
-
-def build_e(state, automaton):
-
-    if not isinstance(state, set):
-        return build_e({state}, automaton)
-
-    res = set()
-    for item in state:
-        res.add(item)
-
-        result = automaton(item, "e")
-
-        res = res.union(result)
-        res = res.union(build_e(result, automaton))
-
-    return frozenset(res)
-
-
-def to_deterministic(automaton):
-    result = fa.FiniteAutomaton(set(), automaton.alphabet, dict(), None, set())
-
-    result.begin = build_e(automaton.begin, automaton)
-    result.states.add(result.begin)
-    states = {result.begin}
-
-    if len(result.begin.intersection(automaton.finals)) != 0:
-        result.finals.add(result.begin)
-
-    removed = set()
-
-    while len(states) != 0:
-        state = next(iter(states))
-        removed.add(state)
-
-        for sign in automaton.alphabet:
-            new_state = frozenset()
-            for item in state:
-                element = build_e(automaton(item, sign), automaton)
-                new_state = new_state.union(element)
-
-            if len(new_state.intersection(automaton.finals)) != 0:
-                result.finals.add(new_state)
-
-            result.states.add(new_state)
-
-            if (state, sign) in result.transitions:
-                result.transitions[(state, sign)].add(new_state)
-            else:
-                result.transitions[(state, sign)] = {new_state}
-
-            if not (new_state in removed):
-                states.add(new_state)
-        states.remove(state)
-
-    return result
-
-
-def rename_states(automaton):
-    states = set()
-    transitions = dict()
-
-    names = dict()
-    for i, state in enumerate(automaton.states):
-        names[frozenset(state)] = f"a{i}"
-        if len(frozenset(state)) != 0:
-            states.add(names[frozenset(state)])
-
-    names[frozenset({})] = ""
-
-    for key, value in automaton.transitions.items():
-        new_key = (names[key[0]], key[1])
-        transitions[new_key] = {names[item] for item in value}
-
-    finals = {names[item] for item in automaton.finals}
-
-    return fa.FiniteAutomaton(states, automaton.alphabet, transitions, names[automaton.begin], finals), names
+INPUT_DIR = "automatons"
+OUTPUT_DIR = "results"
 
 
 def main():
-    with open("automatons/automaton_1.json") as file:
-        automaton = fa.FiniteAutomaton.from_json(file.read())
+    """
+    
+    Convert all e-NFA from folder {INPUT_DIR} to DFA and saves it to folder {OUTPUT_DIR}
+    """
+    if not os.path.isdir(OUTPUT_DIR):
+        os.mkdir(OUTPUT_DIR)
 
-    print(automaton)
+    paths = os.listdir(INPUT_DIR)
+    for path in paths:
+        with open(f"{INPUT_DIR}/{path}") as file:
+            automaton = fa.FiniteAutomaton.from_json(file.read())
 
-    result = to_deterministic(automaton)
-    print(result)
+        print("e-NFA:", automaton, sep="\n")
 
-    renamed, names = rename_states(result)
-    print(names)
-    print(renamed)
+        result = algo.e_nfa_to_dfa(automaton)
+        print("DFA:", result, sep="\n")
 
-    """file = open("automatons.json", "w")
-    file.write(automaton.to_json())
-    file.close()"""
+        renamed, names = algo.rename_states(result)
+        print(names)
+        print("DFA after renaming:", renamed, sep="\n")
+
+        with open(f"{OUTPUT_DIR}/{path}", "w") as file:
+            file.write(renamed.to_json())
 
 
 if __name__ == "__main__":
