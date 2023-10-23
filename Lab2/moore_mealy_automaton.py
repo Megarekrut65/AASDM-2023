@@ -51,7 +51,7 @@ class MooreMealyAutomaton:
         input_alphabet = set(automaton_data["input_alphabet"])
         output_alphabet = set(automaton_data["output_alphabet"])
 
-        transition_function = {eval(key): set(value) for key, value in
+        transition_function = {eval(key): value for key, value in
                                automaton_data["transition_function"].items()}
-        output_function = {eval(key): set(value) for key, value in automaton_data["output_function"].items()}
+        output_function = {key: value for key, value in automaton_data["output_function"].items()}
         return cls(states, input_alphabet, output_alphabet, transition_function, output_function)
