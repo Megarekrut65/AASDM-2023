@@ -21,7 +21,7 @@ class MooreMealyAutomaton:
             if equivalent:
                 e.add(s)
 
-        return e
+        return frozenset(e)
 
     def __str__(self):
         transition_function = ""
@@ -42,7 +42,8 @@ class MooreMealyAutomaton:
             "transition_function": {str(key): list(value) for key, value in self.transition_function.items()},
             "output_function": {str(key): list(value) for key, value in self.output_function.items()},
         }
-        return json.dumps(automaton_data, indent=4)
+
+        return json.dumps(automaton_data, indent=2)
 
     @classmethod
     def from_json(cls, json_str):
