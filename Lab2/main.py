@@ -1,6 +1,6 @@
 import os
-from Lab2.moore_mealy_automaton import MooreMealyAutomaton
-from Lab2.moore_to_mealy import moore_to_mealy
+from moore_mealy_automaton import MooreMealyAutomaton
+from moore_to_mealy import moore_to_mealy, rename_states
 
 INPUT_DIR = "automatons"
 OUTPUT_DIR = "results"
@@ -20,37 +20,12 @@ def main():
         result = moore_to_mealy(automaton)
         print("Mealy:", result, sep="\n")
 
-        # renamed, names = algo.rename_states(result)
-        # print(names)
-        # print("DFA after renaming:", renamed, sep="\n")
+        renamed, names = rename_states(result)
+        print(names)
+        print("FA after renaming:", renamed, sep="\n")
 
         with open(f"{OUTPUT_DIR}/{'result_' + path}", "w") as file:
-            file.write(automaton.to_json())
-
-    # moore = MooreMealyAutomaton(
-    #     states={'a', 'b', 'c', 'd'},
-    #     input_alphabet={'x', 'y'},
-    #     output_alphabet={'0', '1'},
-    #     transition_function={
-    #         ('a', 'y'): 'a',
-    #         ('a', 'x'): 'c',
-    #         ('b', 'y'): 'a',
-    #         ('b', 'x'): 'c',
-    #         ('c', 'y'): 'd',
-    #         ('c', 'x'): 'b',
-    #         ('d', 'y'): 'd',
-    #         ('d', 'x'): 'c',
-    #     },
-    #     output_function={
-    #         'a': '1',
-    #         'b': '0',
-    #         'c': '0',
-    #         'd': '1',
-    #     }
-    # )
-
-    # mealy = moore_to_mealy(moore)
-    # print(mealy)
+            file.write(renamed.to_json())
 
 
 if __name__ == "__main__":

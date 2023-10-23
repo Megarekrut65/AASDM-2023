@@ -1,4 +1,4 @@
-from Lab2.moore_mealy_automaton import MooreMealyAutomaton
+from moore_mealy_automaton import MooreMealyAutomaton
 
 
 def moore_to_mealy(moore):
@@ -22,3 +22,37 @@ def moore_to_mealy(moore):
         new_transition_function,
         new_output_function
     )
+
+
+def rename_states(automaton):
+    """
+    Renames sets of old states to new names. Example: state {1,2,3} will be state a1.
+    :param automaton: Mealy FA
+    :return: Mealy FA with same states but other names of states
+    """
+
+    states = set()
+    transitions = dict()
+    output = dict()
+
+    names = dict()
+    for index, state in enumerate(automaton.states):
+        names[frozenset(state)] = f"a{index}"
+        states.add(names[frozenset(state)])
+
+    for key, value in automaton.transition_function.items():
+
+        new_key = (names[key[0]], key[1])
+        transitions[new_key] = {names[value]}
+
+    for key, value in automaton.output_function.items():
+        new_key = (names[key[0]], key[1])
+        output[new_key] = value
+
+    return MooreMealyAutomaton(
+        states,
+        automaton.input_alphabet,
+        automaton.output_alphabet,
+        transitions,
+        output
+    ), names
