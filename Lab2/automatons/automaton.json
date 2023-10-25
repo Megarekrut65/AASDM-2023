@@ -1,0 +1,44 @@
+{
+  "states": [
+    "a0y",
+    "a1",
+    "a2x",
+    "a2y",
+    "a0x",
+    "a1x",
+    "a1y"
+  ],
+  "input_alphabet": [
+    "x",
+    "y"
+  ],
+  "output_alphabet": [
+    "0",
+    "1"
+  ],
+  "transition_function": {
+    "('a1', 'x')": "a1x",
+    "('a1', 'y')": "a1y",
+    "('a1x', 'x')": "a2x",
+    "('a1x', 'y')": "a2y",
+    "('a1y', 'x')": "a0x",
+    "('a1y', 'y')": "a0y",
+    "('a2x', 'x')": "a1x",
+    "('a2x', 'y')": "a1y",
+    "('a2y', 'x')": "a2x",
+    "('a2y', 'y')": "a2y",
+    "('a0x', 'x')": "a1x",
+    "('a0x', 'y')": "a1y",
+    "('a0y', 'x')": "a0x",
+    "('a0y', 'y')": "a0y"
+},
+  "output_function": {
+    "a1x": "0",
+    "a1y": "1",
+    "a2x": "0",
+    "a2y": "1",
+    "a0x": "0",
+    "a0y": "1"
+  },
+  "initial_state": "a1"
+}
