@@ -4,17 +4,18 @@ import buchi_automaton as ba
 def inter_nba(automaton1, automaton2):
     begin = (list(automaton1.begins)[0], list(automaton2.begins)[0], 1)
 
-    result = ba.BuchiAutomaton(set(), automaton1.alphabet, dict(), {begin}, set())
+    result = ba.BuchiAutomaton(set(), automaton1.alphabet, dict(), {(begin[0], begin[1])}, set())
 
     set_w = {begin}
+    names = {(begin[0], begin[1]): begin}
 
     while len(set_w) != 0:
         state = set_w.pop()
         a, b, i = state
 
-        result.states.add(state)
+        result.states.add((a, b))
         if a in automaton1.finals and i == 1:
-            result.finals.add(state)
+            result.finals.add((a, b))
 
         for x in automaton1.alphabet:
             res1 = automaton1(a, x)
@@ -35,11 +36,21 @@ def inter_nba(automaton1, automaton2):
                     if new_state is None:
                         continue
 
-                    if (state, x) in result.transitions:
-                        result.transitions[(state, x)].add(new_state)
+                    if (item_a, item_b) not in names:
+                        names[(item_a, item_b)] = new_state
+
+                    if ((a, b), x) in result.transitions:
+                        result.transitions[((a, b), x)].add((item_a, item_b))
                     else:
-                        result.transitions[(state, x)] = {new_state}
-                    if new_state not in result.states:
+                        result.transitions[((a, b), x)] = {(item_a, item_b)}
+                    if (item_a, item_b) not in result.states:
                         set_w.add(new_state)
 
-    return result
+    print(result.transitions)
+    return ba.BuchiAutomaton(
+        {names[state] for state in result.states},
+        result.alphabet,
+        {(names[key[0]], key[1]): {names[item] for item in value} for key, value in result.transitions.items()},
+        {names[state] for state in result.begins},
+        {names[state] for state in result.finals}
+    )

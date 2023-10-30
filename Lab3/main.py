@@ -10,14 +10,24 @@ def main():
     if not os.path.isdir(OUTPUT_DIR):
         os.mkdir(OUTPUT_DIR)
 
-    with open(f"{INPUT_DIR}/automaton_0.json") as file:
-        automaton1 = ba.BuchiAutomaton.from_json(file.read())
-    with open(f"{INPUT_DIR}/automaton_0_pair.json") as file:
-        automaton2 = ba.BuchiAutomaton.from_json(file.read())
+    paths = os.listdir(INPUT_DIR)
+    for path in paths:
+        if "pair" in path:
+            continue
 
-    inter = algo.inter_nba(automaton1, automaton2)
-    with open(f"{OUTPUT_DIR}/res.json", "w") as file:
-        file.write(inter.to_json())
+        with open(f"{INPUT_DIR}/{path}") as file:
+            automaton1 = ba.BuchiAutomaton.from_json(file.read())
+        with open(f"{INPUT_DIR}/pair_{path}") as file:
+            automaton2 = ba.BuchiAutomaton.from_json(file.read())
+
+        print("First:", automaton1, sep="\n")
+        print("Second:", automaton2, sep="\n")
+
+        result = algo.inter_nba(automaton1, automaton2)
+        print("InterNBA:", result, sep="\n")
+
+        with open(f"{OUTPUT_DIR}/{'result_' + path}", "w") as file:
+            file.write(result.to_json())
 
 
 if __name__ == "__main__":
