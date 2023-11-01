@@ -16,6 +16,7 @@ def inter_nba(automaton1, automaton2):
         result.states.add((a, b))
         if a in automaton1.finals and i == 1:
             result.finals.add((a, b))
+            names[(a, b)] = state
 
         for x in automaton1.alphabet:
             res1 = automaton1(a, x)
