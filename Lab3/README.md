@@ -2,7 +2,7 @@
 
 Buchi automatons are presented in the form of a json file.
 
-<img src="https://github.com/Megarekrut65/AASDM-2023/blob/main/Lab3/images/input1.png?raw=true" alt="automaton" width="500"/>
+<img src="https://github.com/Megarekrut65/AASDM-2023/blob/main/Lab3/images/input1.jpeg?raw=true" alt="automaton" width="500"/>
 Here is an example for this Buchi automaton:
 
 ````json
