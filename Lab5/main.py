@@ -1,22 +1,9 @@
-from buchi_time_automaton import BuchiTimeAutomaton
+from timed_automaton import TimedAutomaton
 from regional_automaton import RegionalAutomaton
 
+timed_automaton = TimedAutomaton()
+regional_automaton = RegionalAutomaton(timed_automaton)
+regional_automaton.generate_regional_automaton()
 
-def convert_to_regional(buchi_automaton):
-    regional_automaton = RegionalAutomaton()
-
-    state_mapping = {
-        "State1": "d",
-        "State2": "b",
-        "State3": "c"
-    }
-
-    for buchi_state, regional_state in state_mapping.items():
-        regional_automaton.transitions[regional_state]["NextState"] = state_mapping[buchi_automaton.transitions[buchi_state]["NextState"]]
-
-    return regional_automaton
-
-
-buchi_automaton = BuchiTimeAutomaton()
-regional_automaton = convert_to_regional(buchi_automaton)
-regional_automaton.run()
+for state, attributes in regional_automaton.states.items():
+    print(f"{state} --{regional_automaton.transitions}--> {state}")

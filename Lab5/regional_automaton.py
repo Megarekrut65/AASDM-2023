@@ -1,26 +1,39 @@
 class RegionalAutomaton:
-    def __init__(self):
-        self.current_state = "a"
-        self.transitions = {
-            "d": {"NextState": "a"},
-            "a": {"NextState": "b"},
-            "b": {"NextState": "c"},
-            "c": {"NextState": "d"}
-        }
+    def __init__(self, timed_automaton):
+        self.states = {}
+        self.transitions = []
+        self.timed_automaton = timed_automaton
 
-    def run(self, total_iterations=4):
-        iterations = 0
-        while iterations < total_iterations:
-            self.print_current_state()
-            self.transition()
-            iterations += 1
+    def add_state(self, state, clock_values):
+        self.states[state] = {'clock_values': clock_values}
 
-    def transition(self):
-        next_state = self.transitions[self.current_state]["NextState"]
-        print(f"Transitioning from {self.current_state} to {next_state}")
-        self.current_state = next_state
+    def add_transition(self, source, target, action, guard):
+        self.transitions.append({
+            'source': source,
+            'target': target,
+            'action': action,
+            'guard': guard
+        })
 
-    def print_current_state(self):
-        print(f"Current state: {self.current_state}")
+    def generate_regional_automaton(self):
+        for initial_state in self.timed_automaton.initial_states:
+            self.add_state((initial_state, 0), clock_values={})
 
+        for transition in self.timed_automaton.transitions:
+            source, action, target, guard = transition
+            source_state, source_region = source
+            target_state, target_region = target
 
+            next_region = self.find_next_region(source_region)
+
+            source_state_new = (source_state, next_region)
+            target_state_new = (target_state, target_region)
+
+            self.add_state(source_state_new, clock_values={})
+            self.add_transition(source_state_new, target_state_new, action, guard)
+
+    def find_next_region(self, current_region):
+        next_region = current_region + 1
+
+        return next_region
+    
