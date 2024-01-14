@@ -1,5 +1,5 @@
 import buchi_automaton as ba
-import intersection_nba as algo
+import intersection_na as algo
 import os
 
 INPUT_DIR = "automatons"

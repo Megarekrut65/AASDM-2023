@@ -1,0 +1,10 @@
+{
+    "states": [1, 2],
+    "alphabet": ["a", "b"],
+    "transitions": {
+        "(1, 'a')": [2],
+	"(2, 'b')": [1]
+    },
+    "begins": [1],
+    "finals": [1]
+}
